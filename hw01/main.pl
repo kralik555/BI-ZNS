@@ -20,6 +20,9 @@ identifikace:-
 % Báze znalostí
 % ----------------------
 
+chyba("Chybí IČO odběratele"):-
+	\+je_na_dokladu("IČO odběratele").
+
 chyba("Neplatné IČO odběratele"):-
 	je_na_dokladu("IČO odběratele"),
 	algo_chyba("IČO odběratele").
