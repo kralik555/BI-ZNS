@@ -115,18 +115,18 @@ class TRule:
 					negation = False
 					result = not result
 
-			elif r.getType == truleitem.TRuleItemType.R_NOT:
+			elif r.itemType == truleitem.TRuleItemType.R_NOT:
 				negation = not negation
 				
-			elif r.getType == truleitem.TRuleItemType.R_AND:
+			elif r.itemType == truleitem.TRuleItemType.R_AND:
 				if not result:
 					return None
 
-			elif r.getType == truleitem.TRuleItemType.R_OR:
+			elif r.itemType == truleitem.TRuleItemType.R_OR:
 				if not result:
 					return None
 					
-			elif r.getType == truleitem.TRuleItemType.R_EQUAL:
+			elif r.itemType == truleitem.TRuleItemType.R_EQUAL:
 				result = r.compareAtoms( dictionary)
 				if negation:
 					negation = False

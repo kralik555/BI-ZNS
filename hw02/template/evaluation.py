@@ -8,6 +8,7 @@ import parser
 import tfact
 import truleitem
 import trule
+from itertools import product
 
 def solve( facts, rules, atoms):
 	# ======================================================================
@@ -18,12 +19,32 @@ def solve( facts, rules, atoms):
 	# Při implementaci se nemusíte omezovat pouze na tuto funkci. Pokud se
 	# vám to hodí, upravte si (třeba v zájmu unifikace) i třídu TRule.
 	# ======================================================================
-   
-    new_facts = facts.copy()   
+    lengths = set()
+    atom_combos = set()
     for rule in rules:
-        rule.print()
-        print()
-
+        lengths.add(rule.argNum())
+    for length in lengths:
+        for combo in product(atoms, repeat=length):
+            atom_combos.add(combo)
+    
+    def is_new(fact):
+        for f in facts:
+            if fact.compare(f):
+                return False
+        return True
+    added_new = True
+    while added_new:
+        added_new = False
+        for rule in rules:
+            for combo in atom_combos:
+                if len(combo) == rule.argNum():
+                    new_fact = rule.evaluate(combo, facts)
+                    if new_fact is not None and is_new(new_fact):
+                        facts.append(new_fact)
+                        added_new = True
+            if added_new:
+                break
+    return facts
 """
     Často kladené otázky
      --------------------
