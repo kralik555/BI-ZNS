@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------
+#key-------------------------------------------------------------------------
 #  BI-ZNS: Šablona pro úlohu Inferenční systém s dopředným řetězením
 #  (c) 2022 Ladislava Smítková Janků <ladislava.smitkova@fit.cvut.cz>
 #
@@ -21,8 +21,16 @@ def solve( facts, rules, atoms):
 	# ======================================================================
     lengths = set()
     atom_combos = set()
+    
+    def has_negation(rule):
+        for rule_item in rule._ruleItems:
+            if rule_item.itemType == truleitem.TRuleItemType.R_NOT:
+                return True
+        return False
+    
     for rule in rules:
         lengths.add(rule.argNum())
+    sorted_rules = sorted(rules, key=has_negation)
     for length in lengths:
         for combo in product(atoms, repeat=length):
             atom_combos.add(combo)
@@ -32,10 +40,11 @@ def solve( facts, rules, atoms):
             if fact.compare(f):
                 return False
         return True
+    
     added_new = True
     while added_new:
         added_new = False
-        for rule in rules:
+        for rule in sorted_rules:
             for combo in atom_combos:
                 if len(combo) == rule.argNum():
                     new_fact = rule.evaluate(combo, facts)
